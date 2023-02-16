@@ -1,11 +1,21 @@
 
-<input style="width: 50%" autofocus #searchTerm type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
+<input #searchTerm autofocus type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
 
 <br>
-
-<p *ngFor="let item of vidList">
-  {{ item.snippet.title }}<br>
-  <a target="_blank" [href]="'http://youtube.com/watch?v=' + item.id.videoId">
-    <img [src]="item.snippet.thumbnails.default.url" />
-  </a>
+<p>presets:
+  <a href="#" (click)="search('nba highlights');searchTerm.value = 'nba highlights'">nba highlights</a>
+  , <a href="#" (click)="search('nfl highlights');searchTerm.value = 'nfl highlights'">nfl highlights</a>
+  , <a href="#" (click)="search('nhl highlights');searchTerm.value = 'nhl highlights'">nhl highlights</a>
 </p>
+<section>
+<div *ngFor="let item of vidList">
+  <h6>
+  <a target="_blank" [href]="'http://youtube.com/watch?v=' + item.id.videoId">
+  {{ item.snippet.title }}<br>
+  </a>
+  </h6>
+    <!-- <img [src]="item.snippet.thumbnails.default.url" /> -->
+  <iframe width="420" height="345" [src]="'https://www.youtube.com/embed/' + item.id.videoId | safe">
+  </iframe>
+</div>
+</section>

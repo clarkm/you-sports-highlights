@@ -1,4 +1,6 @@
 import { Component } from '@angular/core';
+import { DomSanitizer } from '@angular/platform-browser';
+import { SafePipe } from './safe.pipe';
 import { VidRequestService } from './vid-request.service';
 import { take } from 'rxjs';
 
