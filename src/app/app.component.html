@@ -1,21 +1,54 @@
 
-<input #searchTerm autofocus type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
 
-<br>
-<p>presets:
-  <a href="#" (click)="search('nba highlights');searchTerm.value = 'nba highlights'">nba highlights</a>
-  , <a href="#" (click)="search('nfl highlights');searchTerm.value = 'nfl highlights'">nfl highlights</a>
-  , <a href="#" (click)="search('nhl highlights');searchTerm.value = 'nhl highlights'">nhl highlights</a>
-</p>
-<section>
-<div *ngFor="let item of vidList">
-  <h6>
-  <a target="_blank" [href]="'http://youtube.com/watch?v=' + item.id.videoId">
-  {{ item.snippet.title }}<br>
-  </a>
-  </h6>
-    <!-- <img [src]="item.snippet.thumbnails.default.url" /> -->
-  <iframe width="420" height="345" [src]="'https://www.youtube.com/embed/' + item.id.videoId | safe">
-  </iframe>
-</div>
+<h1 *ngIf="userId">logged in user: {{user?.email | json }}</h1>
+
+  <form *ngIf="!userId" [formGroup]="signUpForm" (ngSubmit)="createAccount()">
+    <h3>Sign Up</h3>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" formControlName="email" required>
+  
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" formControlName="password" required>
+  
+    <button type="submit" [disabled]="signUpForm.invalid">Sign Up</button>
+  </form>
+
+  <form *ngIf="!userId" [formGroup]="signInForm" (ngSubmit)="onSignInSubmit()">
+    <h3>Sign In</h3>
+    <label for="email">Email:</label>
+    <input type="email" id="email" name="email" formControlName="email" required>
+  
+    <label for="password">Password:</label>
+    <input type="password" id="password" name="password" formControlName="password" required>
+  
+    <button type="submit" [disabled]="signInForm.invalid">Sign In</button>
+  </form>
+
+<section *ngIf="userId">
+
+  <input #searchTerm autofocus type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
+  {{user | json}}<br>
+  {{ userId }}
+  <br>
+  <button (click)="onSignOutClick()">SIGN OUT</button>
+  <br>
+  <br />
+  <p>presets:
+    <a href="#" (click)="search('nba highlights');searchTerm.value = 'nba highlights'">nba highlights</a>
+    , <a href="#" (click)="search('nfl highlights');searchTerm.value = 'nfl highlights'">nfl highlights</a>
+    , <a href="#" (click)="search('nhl highlights');searchTerm.value = 'nhl highlights'">nhl highlights</a>
+  </p>
+  <section>
+  <div *ngFor="let item of vidList">
+    <h6>
+    <a target="_blank" [href]="'http://youtube.com/watch?v=' + item.id.videoId">
+    {{ item.snippet.title }}<br>
+    </a>
+    </h6>
+      <!-- <img [src]="item.snippet.thumbnails.default.url" /> -->
+    <iframe width="420" height="345" [src]="'https://www.youtube.com/embed/' + item.id.videoId | safe">
+    </iframe>
+  </div>
+  </section>
+
 </section>
