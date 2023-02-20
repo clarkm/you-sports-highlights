@@ -55,21 +55,16 @@ signUpForm: FormGroup = new FormGroup({
 
     this.database = getDatabase(app);
 
-    this.auth.onAuthStateChanged((user:any) => {
-      console.log('logged in user', user);
-      if (user) {
-        // you're logged in
-        this.user = user;
-        this.userId = user.uid;
-        this.userRef = ref(this.database, `users/${this.userId}` );
-
-        onDisconnect(this.userRef).remove();
-
+    const selectionRef = ref(this.database, `users/${this.userId}` );
+    onValue(selectionRef, (snapshot:any) => {
+      const data = snapshot.val()?.selections;
+      if (data) {
+        this.selections = data;
+      } else {
+        this.selections = [];
       }
-      else {
-        // you're logged out
-      }
-
+      console.log('snapshot: ', data)
+      // const selectionKeys = Object.keys(data);
     });
 
    
@@ -130,8 +125,39 @@ signUpForm: FormGroup = new FormGroup({
       this.vidList = res.items
     })
   }
+selections:any;
+selectionForm = new FormGroup({
+  name: new FormControl(''),
+  selections: new FormControl([]),
+});
 
-  ngOnInit(): void {
+onSelectionSubmit() {
+  this.selections.push(this.selectionForm.value.name);
+  const selectionRef = ref(this.database, `users/${this.userId}` );
+  set(selectionRef, {
+    selections: this.selections
+  });
+}
+
+  ngOnInit() {
+    this.auth.onAuthStateChanged((user:any) => {
+      if (user) {
+        this.userId = user.uid;
+        this.user = user;
+        this.userRef = ref(this.database, `users/${this.userId}` );
+        const selectionRef = ref(this.database, `users/${this.userId}/selections`);
+        onValue(selectionRef, (snapshot:any) => {
+          const data = snapshot.val();
+          if (data) {
+            this.selections = Object.values(data);
+          } else {
+            this.selections = [];
+          }
+        });
+      } else {
+        this.selections = [];
+      }
+    });
   }
   
 }

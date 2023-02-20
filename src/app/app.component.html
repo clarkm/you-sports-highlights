@@ -32,6 +32,17 @@
   <br>
   <button (click)="onSignOutClick()">SIGN OUT</button>
   <br>
+
+  <form [formGroup]="selectionForm" (ngSubmit)="onSelectionSubmit()">
+    <label for="name">Name:</label>
+    <input type="text" id="name" formControlName="name">
+    
+    <label for="selections">Selections:</label>
+    
+    <button type="submit">Submit</button>
+  </form>
+
+  {{selections | json}}
   <br />
   <p>presets:
     <a href="#" (click)="search('nba highlights');searchTerm.value = 'nba highlights'">nba highlights</a>
