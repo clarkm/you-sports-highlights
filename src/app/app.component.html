@@ -27,29 +27,26 @@
 <section *ngIf="userId">
 
   <input #searchTerm autofocus type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
-  {{user | json}}<br>
-  {{ userId }}
+  <!-- {{user | json}}<br>
+  {{ userId }} -->
   <br>
   <button (click)="onSignOutClick()">SIGN OUT</button>
   <br>
 
   <form [formGroup]="selectionForm" (ngSubmit)="onSelectionSubmit()">
-    <label for="name">Name:</label>
-    <input type="text" id="name" formControlName="name">
+    <input type="text" id="name" formControlName="name" placeholder="enter preset selection">
     
     <label for="selections">Selections:</label>
     
     <button type="submit">Submit</button>
   </form>
-
-  {{selections | json}}
-  <br />
-  <p>presets:
-    <a href="#" (click)="search('nba highlights');searchTerm.value = 'nba highlights'">nba highlights</a>
-    , <a href="#" (click)="search('nfl highlights');searchTerm.value = 'nfl highlights'">nfl highlights</a>
-    , <a href="#" (click)="search('nhl highlights');searchTerm.value = 'nhl highlights'">nhl highlights</a>
+  <p *ngFor="let selection of selections">
+    <a href="#" (click)="search(selection);searchTerm.value = selection">
+    {{selection}}</a>
+    <button (click)="onDeleteSelection(selection)">delete</button>
   </p>
-  <section>
+  <br />
+  <section class="vidlist">
   <div *ngFor="let item of vidList">
     <h6>
     <a target="_blank" [href]="'http://youtube.com/watch?v=' + item.id.videoId">

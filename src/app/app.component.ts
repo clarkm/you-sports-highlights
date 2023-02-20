@@ -3,7 +3,7 @@ import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { createUserWithEmailAndPassword, getAuth, signInAnonymously, signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { getDatabase, onChildAdded, onDisconnect, onValue, ref, set } from "firebase/database";
+import { get, getDatabase, onChildAdded, onDisconnect, onValue, ref, remove, set } from "firebase/database";
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafePipe } from './safe.pipe';
@@ -138,6 +138,20 @@ onSelectionSubmit() {
     selections: this.selections
   });
 }
+
+onDeleteSelection(selection: any) {
+  const userId = this.auth.currentUser.uid;
+  const selectionRef = ref(this.database, `users/${userId}/selections`);
+  get(selectionRef).then((snapshot: any) => {
+    const data = snapshot.val();
+    const selectionIndex = data.findIndex((item: any) => item === selection);
+    if (selectionIndex >= 0) {
+      const newSelections = [...data.slice(0, selectionIndex), ...data.slice(selectionIndex + 1)];
+      set(selectionRef, newSelections);
+    }
+  });
+}
+
 
   ngOnInit() {
     this.auth.onAuthStateChanged((user:any) => {
