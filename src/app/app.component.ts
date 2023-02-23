@@ -8,6 +8,7 @@ import { get, getDatabase, onChildAdded, onDisconnect, onValue, ref, remove, set
 import { DomSanitizer } from '@angular/platform-browser';
 import { SafePipe } from './safe.pipe';
 import { VidRequestService } from './vid-request.service';
+import { default as env } from '../env.json';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
 import { take } from 'rxjs';
@@ -21,7 +22,7 @@ export class AppComponent implements OnInit{
 
   // Your web app's Firebase configuration
 firebaseConfig = {
-  apiKey: "AIzaSyB7NPvyrv0bPIhedYBveQQIUlXBTIo0L-g",
+  apiKey: env.FIREBASE_API_KEY,
   authDomain: "sports-highlights-search.firebaseapp.com",
   databaseURL: "https://sports-highlights-search-default-rtdb.firebaseio.com",
   projectId: "sports-highlights-search",
