@@ -26,7 +26,9 @@
 
 <section *ngIf="userId">
 
-  <input #searchTerm autofocus type="text" placeholder="enter search term and click enter" (keyup.enter)="search(searchTerm.value)" />
+  <input #searchTerm autofocus type="text" 
+  placeholder="enter search term and click enter" 
+  (keyup.enter)="search(searchTerm.value)" />
   <!-- {{user | json}}<br>
   {{ userId }} -->
   <br>
@@ -34,15 +36,18 @@
   <br>
 
   <form [formGroup]="selectionForm" (ngSubmit)="onSelectionSubmit()">
-    <input type="text" id="name" formControlName="name" placeholder="enter preset selection">
-    
+    <input type="text" id="name" formControlName="name" 
+    placeholder="enter preset selection">
+    <input type="checkbox" formControlName="preLoad" /> 
     <label for="selections">Selections:</label>
     
     <button type="submit">Submit</button>
   </form>
   <p *ngFor="let selection of selections">
-    <a href="#" (click)="search(selection);searchTerm.value = selection">
-    {{selection}}</a>
+    <a href="#" (click)="search(selection.name);searchTerm.value = selection.name">
+    {{selection.name}}</a> 
+    load on start: 
+    <input (click)="onPreLoadToggle(selection)" type="checkbox" [checked]="selection.preLoad" />
     <button (click)="onDeleteSelection(selection)">delete</button>
   </p>
   <br />

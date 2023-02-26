@@ -48,6 +48,14 @@ signUpForm: FormGroup = new FormGroup({
   results$: any;
   vidList: any;
 
+  selections:any;
+  selectionForm = new FormGroup({
+    name: new FormControl(''),
+    selections: new FormControl([]),
+    preLoad: new FormControl(false)
+  });
+
+
   constructor(private vidRequestService: VidRequestService, private fb: FormBuilder) {
     // Initialize Firebase
     const app = initializeApp(this.firebaseConfig);
@@ -118,36 +126,50 @@ signUpForm: FormGroup = new FormGroup({
     });
   }
 
-  search(term: string) {
+  search(term: any) {
     this.results$ = this.vidRequestService.callYoutubeApi(term);
 
     this.results$.pipe(take(1)).subscribe((res: any) => {
-      // debugger
       this.vidList = res.items
     })
   }
-selections:any;
-selectionForm = new FormGroup({
-  name: new FormControl(''),
-  selections: new FormControl([]),
-});
+
 
 onSelectionSubmit() {
-  this.selections.push(this.selectionForm.value.name);
+  this.selections.push(
+    {
+      name: this.selectionForm.value.name,
+      preLoad: this.selectionForm.value.preLoad
+    }
+    );
   const selectionRef = ref(this.database, `users/${this.userId}` );
   set(selectionRef, {
     selections: this.selections
   });
 }
 
-onDeleteSelection(selection: any) {
+onPreLoadToggle(selection: any) {
   const userId = this.auth.currentUser.uid;
-  const selectionRef = ref(this.database, `users/${userId}/selections`);
+  const selectionRef = ref(this.database, `users/${userId}`);
   get(selectionRef).then((snapshot: any) => {
     const data = snapshot.val();
-    const selectionIndex = data.findIndex((item: any) => item === selection);
+    const selectionIndex = data.selections.findIndex((item: { name: any; }) => item.name === selection.name)
     if (selectionIndex >= 0) {
-      const newSelections = [...data.slice(0, selectionIndex), ...data.slice(selectionIndex + 1)];
+      data.selections[selectionIndex].preLoad = !data.selections[selectionIndex].preLoad;
+      set(selectionRef, data);
+    }
+  });
+}
+
+
+onDeleteSelection(selection: any) {
+  const userId = this.auth.currentUser.uid;
+  const selectionRef = ref(this.database, `users/${userId}`);
+  get(selectionRef).then((snapshot: any) => {
+    const data = snapshot.val();
+    const selectionIndex = data.selections.findIndex((item: { name: any; }) => item.name === selection.name)
+    if (selectionIndex >= 0) {
+      const newSelections = [...data.selections.slice(0, selectionIndex), ...data.selections.slice(selectionIndex + 1)];
       set(selectionRef, newSelections);
     }
   });
@@ -165,6 +187,11 @@ onDeleteSelection(selection: any) {
           const data = snapshot.val();
           if (data) {
             this.selections = Object.values(data);
+            const selected = data.find((item: { preLoad: boolean }) => item.preLoad);
+            if (selected) {
+              this.search(selected.name);
+            }
+
           } else {
             this.selections = [];
           }
