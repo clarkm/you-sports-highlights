@@ -6,8 +6,10 @@ import { createUserWithEmailAndPassword, getAuth, signInAnonymously, signInWithE
 import { get, getDatabase, onChildAdded, onDisconnect, onValue, ref, remove, set } from "firebase/database";
 
 import { DomSanitizer } from '@angular/platform-browser';
+import { MatDialog } from '@angular/material/dialog';
 import { SafePipe } from './safe.pipe';
 import { VidRequestService } from './vid-request.service';
+import { VideoDialogComponent } from './components/video-dialog/video-dialog.component';
 import { default as env } from '../env.json';
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
@@ -56,7 +58,9 @@ signUpForm: FormGroup = new FormGroup({
   });
 
 
-  constructor(private vidRequestService: VidRequestService, private fb: FormBuilder) {
+  constructor(private vidRequestService: VidRequestService, 
+    private fb: FormBuilder, 
+    private dialog: MatDialog) {
     // Initialize Firebase
     const app = initializeApp(this.firebaseConfig);
 
@@ -77,6 +81,14 @@ signUpForm: FormGroup = new FormGroup({
     });
 
    
+  }
+  
+  openVideoDialog(vidUrl: string) {
+    const dialogRef = this.dialog.open(VideoDialogComponent, {
+      data: {
+        videoUrl: `https://www.youtube.com/embed/${vidUrl}`,
+      }
+    });
   }
 
   createAccount() {
