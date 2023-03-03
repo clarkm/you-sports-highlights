@@ -25,6 +25,10 @@
   </form>
 
 <section *ngIf="userId">
+<!-- put the corresponding logos in place of text here -->
+  <a href="#" (click)="search('full game highlights', 'UCWJ2lWNubArHWmf3FIHbfcQ')">nba channel highlights</a> | 
+  <a href="#" (click)="search('full game highlights', 'UCDVYQ4Zhbm3S2dlz7P1GBDg')">nfl channel highlights</a> | 
+  <a href="#" (click)="search('premier league highlights','UCqZQlzSHbVJrwrn5XvzrzcA')">premier league highlights</a>
 
   <input #searchTerm autofocus type="text" 
   placeholder="enter search term and click enter" 
@@ -37,7 +41,7 @@
     <input type="text" id="name" formControlName="name" 
     placeholder="enter preset selection">
     <input type="checkbox" formControlName="preLoad" /> 
-    <label for="selections">Selections:</label>
+    <label for="selections">Your selections:</label>
     
     <button type="submit">Submit</button>
   </form>

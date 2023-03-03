@@ -86,7 +86,7 @@ signUpForm: FormGroup = new FormGroup({
   openVideoDialog(vidUrl: string) {
     const dialogRef = this.dialog.open(VideoDialogComponent, {
       data: {
-        videoUrl: `https://www.youtube.com/embed/${vidUrl}`,
+        videoUrl: `https://www.youtube.com/embed/${vidUrl}`
       }
     });
   }
@@ -138,8 +138,8 @@ signUpForm: FormGroup = new FormGroup({
     });
   }
 
-  search(term: any) {
-    this.results$ = this.vidRequestService.callYoutubeApi(term);
+  search(term: string, chanId?:string) {
+    this.results$ = this.vidRequestService.callYoutubeApi(term, chanId ? chanId : undefined);
 
     this.results$.pipe(take(1)).subscribe((res: any) => {
       this.vidList = res.items
