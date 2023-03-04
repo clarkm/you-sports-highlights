@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatSort, Sort } from '@angular/material/sort';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { createUserWithEmailAndPassword, getAuth, signInAnonymously, signInWithEmailAndPassword, signOut } from "firebase/auth";
@@ -7,6 +8,7 @@ import { get, getDatabase, onChildAdded, onDisconnect, onValue, ref, remove, set
 
 import { DomSanitizer } from '@angular/platform-browser';
 import { MatDialog } from '@angular/material/dialog';
+import { MatTableDataSource } from '@angular/material/table';
 import { SafePipe } from './safe.pipe';
 import { VidRequestService } from './vid-request.service';
 import { VideoDialogComponent } from './components/video-dialog/video-dialog.component';
@@ -20,7 +22,7 @@ import { take } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit{
+export class AppComponent implements OnInit {
 
   // Your web app's Firebase configuration
 firebaseConfig = {
@@ -49,6 +51,8 @@ signUpForm: FormGroup = new FormGroup({
 
   results$: any;
   vidList: any;
+  @ViewChild(MatSort) sort: MatSort | unknown;
+
 
   selections:any;
   selectionForm = new FormGroup({
@@ -81,6 +85,17 @@ signUpForm: FormGroup = new FormGroup({
     });
 
    
+  }
+  
+  onSortChange(e: Sort) {
+    if (this.vidList) {
+      const direction = e.direction === 'asc' ? 1 : -1;
+      this.vidList.data = this.vidList.data.slice().sort((a: any, b: any) => {
+        const propA = a.snippet[e.active];
+        const propB = b.snippet[e.active];
+        return (propA < propB ? -1 : propA > propB ? 1 : 0) * direction;
+      });
+    }
   }
   
   openVideoDialog(vidUrl: string) {
@@ -142,7 +157,11 @@ signUpForm: FormGroup = new FormGroup({
     this.results$ = this.vidRequestService.callYoutubeApi(term, chanId ? chanId : undefined);
 
     this.results$.pipe(take(1)).subscribe((res: any) => {
-      this.vidList = res.items
+      this.vidList = new MatTableDataSource(res.items);
+
+      if (this.sort) {
+        this.vidList.sort = this.sort;
+      }
     })
   }
 
@@ -203,6 +222,9 @@ onDeleteSelection(selection: any) {
             if (selected) {
               this.search(selected.name);
             }
+            // Initialize the sort for the vidList here
+            this.vidList = new MatTableDataSource([]);
+            this.vidList.sort = this.sort;
 
           } else {
             this.selections = [];
