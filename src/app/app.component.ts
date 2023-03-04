@@ -124,9 +124,9 @@ signUpForm: FormGroup = new FormGroup({
 
   }
 
-  onSignInSubmit() {
-    const email = this.signInForm.get('email')?.value;
-    const password = this.signInForm.get('password')?.value;
+  onSignInSubmit(formData: any) {
+    const email = formData.email;
+    const password = formData.password;
     signInWithEmailAndPassword(this.auth, email, password)
       .then((userCredential: { user: any; }) => {
         // User signed in successfully
