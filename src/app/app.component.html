@@ -2,29 +2,10 @@
 
 <h1 *ngIf="userId">logged in user: {{user?.email | json }}</h1>
 
-<app-auth-form *ngIf="!userId" (submitted)="onSignInSubmit($event)"></app-auth-form>
-
-  <!-- <form *ngIf="!userId" [formGroup]="signUpForm" (ngSubmit)="createAccount()">
-    <h3>Sign Up</h3>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" formControlName="email" required>
-  
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" formControlName="password" required>
-  
-    <button type="submit" [disabled]="signUpForm.invalid">Sign Up</button>
-  </form>
-
-  <form *ngIf="!userId" [formGroup]="signInForm" (ngSubmit)="onSignInSubmit()">
-    <h3>Sign In</h3>
-    <label for="email">Email:</label>
-    <input type="email" id="email" name="email" formControlName="email" required>
-  
-    <label for="password">Password:</label>
-    <input type="password" id="password" name="password" formControlName="password" required>
-  
-    <button type="submit" [disabled]="signInForm.invalid">Sign In</button>
-  </form> -->
+<section *ngIf="!userId" class="auth-section">
+  <app-auth-form [signIn]="true" (submitted)="onSignInSubmit($event)"></app-auth-form>
+  <app-auth-form [signIn]="false" *ngIf="!userId" (submitted)="createAccount($event)"></app-auth-form>
+</section>
 
 <section *ngIf="userId">
 <!-- put the corresponding logos in place of text here -->

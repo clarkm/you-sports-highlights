@@ -106,9 +106,9 @@ signUpForm: FormGroup = new FormGroup({
     });
   }
 
-  createAccount() {
-    const email = this.signUpForm.get('email')?.value;
-    const password = this.signUpForm.get('password')?.value;
+  createAccount(formData: any) {
+    const email = formData.email;
+    const password = formData.password;
     createUserWithEmailAndPassword(this.auth,email,password)
     .then((userCredential: any) => {
       // User created successfully

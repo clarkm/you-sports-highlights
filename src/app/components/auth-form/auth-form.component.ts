@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormControl, FormGroup, Validators } from '@angular/forms';
 
 @Component({
@@ -8,6 +8,7 @@ import { FormControl, FormGroup, Validators } from '@angular/forms';
 })
 export class AuthFormComponent {
   @Output() submitted = new EventEmitter();
+  @Input() signIn:boolean = false;
 
   authForm = new FormGroup({
     email: new FormControl('', [Validators.required, Validators.email]),
