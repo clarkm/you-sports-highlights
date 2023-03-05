@@ -10,6 +10,15 @@
     justify-content: center;
     height: 100vh;
 }
+.logos {
+    display: flex;justify-content: center;
+    img {max-height: 100px;}
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+}
 
 div {
     overflow: hidden;

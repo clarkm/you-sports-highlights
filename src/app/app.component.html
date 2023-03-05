@@ -1,6 +1,8 @@
 
-
-<h1 *ngIf="userId">logged in user: {{user?.email | json }}</h1>
+<header>
+  <h4 *ngIf="userId">{{ user?.email }}</h4>
+  <button (click)="onSignOutClick()">SIGN OUT</button>
+</header>
 
 <section *ngIf="!userId" class="auth-section">
   <app-auth-form [signIn]="true" (submitted)="onSignInSubmit($event)"></app-auth-form>
@@ -8,23 +10,23 @@
 </section>
 
 <section *ngIf="userId">
-<!-- put the corresponding logos in place of text here -->
-  <a href="#" (click)="search('full game highlights', 'UCWJ2lWNubArHWmf3FIHbfcQ')">nba channel highlights</a> | 
-  <a href="#" (click)="search('full game highlights', 'UCqFMzb-4AUf6WAIbl132QKA')">nhl channel highlights</a> | 
-  <a href="#" (click)="search('full game highlights', 'UCDVYQ4Zhbm3S2dlz7P1GBDg')">nfl channel highlights</a> | 
-  <a href="#" (click)="search('game highlights', 'UCoLrcjPV5PbUrUyXq5mjc_A')">mlb channel highlights</a> | 
-  <a href="#" (click)="search('premier league highlights','UCqZQlzSHbVJrwrn5XvzrzcA')">premier league highlights</a>
+  <div class="logos">
+    <a href="#" (click)="search('full game highlights', 'UCWJ2lWNubArHWmf3FIHbfcQ')"><img src="assets/nba.png" alt="nba channel highlights" /></a>
+    <a href="#" (click)="search('full game highlights', 'UCqFMzb-4AUf6WAIbl132QKA')"><img src="assets/nhl.png" alt="nhl channel highlights" /></a>
+    <a href="#" (click)="search('full game highlights', 'UCDVYQ4Zhbm3S2dlz7P1GBDg')"><img src="assets/nfl.png" alt="nfl channel highlights" /></a>
+    <a href="#" (click)="search('game highlights', 'UCoLrcjPV5PbUrUyXq5mjc_A')"><img src="assets/mlb.png" alt="mlb channel highlights" /></a>
+    <a href="#" (click)="search('premier league highlights','UCqZQlzSHbVJrwrn5XvzrzcA')"><img src="assets/premier.png" alt="premier league highlights" /></a>
+  </div>
 
   <input #searchTerm autofocus type="text" 
-  placeholder="enter search term and click enter" 
+  placeholder="or enter a search term and click enter" 
   (keyup.enter)="search(searchTerm.value)" />
   <br>
-  <button (click)="onSignOutClick()">SIGN OUT</button>
   <br>
 
   <form [formGroup]="selectionForm" (ngSubmit)="onSelectionSubmit()">
     <input type="text" id="name" formControlName="name" 
-    placeholder="enter preset selection">
+    placeholder="enter a custom preset selection">
     <input type="checkbox" formControlName="preLoad" /> 
     <label for="selections">Your selections:</label>
     
