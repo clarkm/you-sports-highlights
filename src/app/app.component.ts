@@ -1,15 +1,13 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup } from '@angular/forms';
+import { MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatSort, Sort } from '@angular/material/sort';
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
 import { createUserWithEmailAndPassword, getAuth, signInAnonymously, signInWithEmailAndPassword, signOut } from "firebase/auth";
 import { get, getDatabase, onChildAdded, onDisconnect, onValue, ref, remove, set } from "firebase/database";
 
-import { DomSanitizer } from '@angular/platform-browser';
-import { MatDialog } from '@angular/material/dialog';
 import { MatTableDataSource } from '@angular/material/table';
-import { SafePipe } from './safe.pipe';
 import { VidRequestService } from './vid-request.service';
 import { VideoDialogComponent } from './components/video-dialog/video-dialog.component';
 import { default as env } from '../env.json';
@@ -61,6 +59,7 @@ signUpForm: FormGroup = new FormGroup({
     preLoad: new FormControl(false)
   });
 
+  dialogRef: MatDialogRef<any> | undefined;
 
   constructor(private vidRequestService: VidRequestService, 
     private fb: FormBuilder, 
@@ -99,9 +98,16 @@ signUpForm: FormGroup = new FormGroup({
   }
   
   openVideoDialog(vidUrl: string) {
-    const dialogRef = this.dialog.open(VideoDialogComponent, {
+    this.dialogRef = this.dialog.open(VideoDialogComponent, {
       data: {
         videoUrl: `https://www.youtube.com/embed/${vidUrl}`
+      }
+    });
+    this.dialogRef.keydownEvents().pipe(take(1)).subscribe(event => {
+      // Check if the escape key was pressed
+      if (event?.key === 'Escape') {
+        // Close the dialog
+        this.dialogRef?.close();
       }
     });
   }
@@ -158,10 +164,7 @@ signUpForm: FormGroup = new FormGroup({
 
     this.results$.pipe(take(1)).subscribe((res: any) => {
       this.vidList = new MatTableDataSource(res.items);
-
-      if (this.sort) {
-        this.vidList.sort = this.sort;
-      }
+      this.onSortChange({active: 'publishedAt', direction: 'desc'})
     })
   }
 
