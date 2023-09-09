@@ -16,6 +16,7 @@
     <a href="#" (click)="search('game highlights', 'UCoLrcjPV5PbUrUyXq5mjc_A')"><img src="assets/mlb.png" alt="mlb channel highlights" /></a>
     <a href="#" (click)="search('premier league highlights','UCqZQlzSHbVJrwrn5XvzrzcA')"><img src="assets/premier.png" alt="premier league highlights" /></a>
   </div>
+  <p>remaining searches: {{ apiCounter }}</p>
 
   <input #searchTerm type="text" 
   placeholder="or enter a search term and click enter" 
